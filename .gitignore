@@ -1,0 +1,8 @@
+# Folders
+.vscode/
+docker/clickhouse/*
+docker/dummy/venv
+
+# Files
+.env
+.DS_Store
