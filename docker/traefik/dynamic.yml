@@ -1,0 +1,36 @@
+http:
+
+    routers:
+
+        traefik:
+            rule: Host(`{{env "TRAEFIK_DASHBOARD_DOMAIN"}}`)
+            entryPoints:
+                - web
+            service: api@internal
+            middlewares:
+                - "traefik-auth"
+
+        logapp:
+            rule: Host(`{{env "LOGAPI_DOMAIN"}}`)
+            entryPoints:
+                - web
+            service: log-service
+
+    middlewares:
+        traefik-auth:
+            basicAuth:
+                users: # admin / admin
+                    - "admin:$2y$10$Gt1Ym2MJwVyqPxHRM3xFuen8BzHPCB3GndtIje0xpz8fNxccOd1gq"
+
+    services:
+
+        log-service:
+            loadBalancer:
+                servers:
+                    - url: "http://logservice:3000"
+tls:
+    options:
+        default:
+            minVersion: VersionTLS12
+        mintls13:
+            minVersion: VersionTLS13

@@ -1,0 +1,61 @@
+services:
+
+    clickhouse:
+        image: clickhouse/clickhouse-server:latest
+        container_name: clickhousedb
+        cap_add:
+            - SYS_NICE
+        environment:
+            - CLICKHOUSE_USER=${CLICKHOUSE_USER}
+            - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD}
+        ports:
+            - "8123:8123"
+            - "9000:9000"
+        volumes:
+            - ./docker/clickhouse:/var/lib/clickhouse
+        restart: unless-stopped
+        networks:
+            - log-network
+
+    logservice:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        ports:
+            - "3000:3000"
+        environment:
+            - CLICKHOUSE_USER=${CLICKHOUSE_USER}
+            - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD}
+        depends_on:
+            - clickhouse
+        restart: unless-stopped
+        networks:
+            - log-network
+
+    traefik:
+        image: traefik:latest
+        container_name: traefik
+        restart: unless-stopped
+        ports:
+            - "80:80"
+            - "443:443"
+        networks:
+            - log-network
+        environment:
+            - TZ=${TIMEZONE}
+            - TRAEFIK_DASHBOARD_DOMAIN=${TRAEFIK_DASHBOARD_DOMAIN}
+            - LOGAPI_DOMAIN=${LOGAPI_DOMAIN}
+        depends_on:
+            - clickhouse
+            - logservice
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+            - ./docker/traefik:/etc/traefik/
+
+networks:
+    log-network:
+        driver: bridge
+        ipam:
+            driver: default
+            config:
+                -   subnet: 172.20.0.0/16
