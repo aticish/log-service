@@ -6,3 +6,4 @@ docker/dummy/venv
 # Files
 .env
 .DS_Store
+.insert_done
