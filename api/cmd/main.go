@@ -30,8 +30,6 @@ func main() {
 		}
 	}()
 
-	log.Printf("Server started at localhost:%d", 3000)
-
 	// Wait for shutdown signal
 	<-sigChan
 	log.Print("Shutting down server...")
@@ -40,5 +38,5 @@ func main() {
 	if err := app.ShutdownWithTimeout(5 * time.Second); err != nil {
 		log.Fatal("Error during server shutdown. %w", err)
 	}
-	log.Print("Server gracefully stopped")
+	log.Print("Server gracefully stopped!")
 }
