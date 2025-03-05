@@ -1,6 +1,6 @@
 module github.com/aticish/log-service
 
-go 1.24.0
+go 1.24.1
 
 require (
 	github.com/ClickHouse/ch-go v0.65.1 // indirect
