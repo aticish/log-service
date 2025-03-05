@@ -7,15 +7,27 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/aticish/log-service/handlers"
 	"github.com/gofiber/fiber/v2"
 )
 
 func main() {
 
-	app := fiber.New()
+	app := fiber.New(fiber.Config{
+		IdleTimeout:  5 * time.Second,
+		WriteTimeout: 10 * time.Second,
+		ReadTimeout:  10 * time.Second,
+		Concurrency:  256 * 1024,
+	})
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Its working")
+	// Write & Read log
+	app.Post("/api/v1", func(c *fiber.Ctx) error {
+		return handlers.VersionOne(c)
+	})
+
+	// Default
+	app.Use(func(c *fiber.Ctx) error {
+		return handlers.NotFound(c)
 	})
 
 	// Create channel for shurtdown signals
