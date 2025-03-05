@@ -3,9 +3,16 @@ import random
 import ipaddress
 from datetime import datetime
 import time
+import os
+
+# Get environment variables
+clickhouse_user = os.environ.get('CLICKHOUSE_USER')
+clickhouse_password = os.environ.get('CLICKHOUSE_PASSWORD')
+clickhouse_database = os.environ.get('CLICKHOUSE_DATABASE')
+clickhouse_table = os.environ.get('CLICKHOUSE_TABLE')
 
 # Clickhouse connection
-client = clickhouse_driver.Client('clickhouse', user='log', password='123456789', port=9000, database='logs')
+client = clickhouse_driver.Client('clickhouse', user=clickhouse_user, password=clickhouse_password, port=9000, database=clickhouse_database)
 
 # How many records will be added?
 num_records = 10000000
@@ -37,7 +44,7 @@ for _ in range(num_records):
     data.append((user_id, severity, user_ip, action, content, agent, timestamp))
 
 client.execute(
-    f'INSERT INTO logs (user_id, severity, user_ip, action, content, agent, timestamp) VALUES',
+    f'INSERT INTO {clickhouse_database}.{clickhouse_table} (user_id, severity, user_ip, action, content, agent, timestamp) VALUES',
     data
 )
 

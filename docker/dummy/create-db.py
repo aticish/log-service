@@ -1,15 +1,21 @@
 import clickhouse_driver
+import os
+
+clickhouse_user = os.environ.get('CLICKHOUSE_USER')
+clickhouse_password = os.environ.get('CLICKHOUSE_PASSWORD')
+clickhouse_database = os.environ.get('CLICKHOUSE_DATABASE')
+clickhouse_table = os.environ.get('CLICKHOUSE_TABLE')
 
 # ClickHouse connection details
-client = clickhouse_driver.Client('clickhouse', user='log', password='123456789', port=9000)
+client = clickhouse_driver.Client('clickhouse', user=clickhouse_user, password=clickhouse_password, port=9000)
 
 # Create database if it doesn't exist
-create_db_query = "CREATE DATABASE IF NOT EXISTS logs;"
+create_db_query = f"CREATE DATABASE IF NOT EXISTS {clickhouse_database};"
 client.execute(create_db_query)
 
 # Create logs table
-create_logs_table = """
-CREATE TABLE IF NOT EXISTS logs.logs (
+create_logs_table = f"""
+CREATE TABLE IF NOT EXISTS {clickhouse_database}.{clickhouse_table} (
     user_id UInt64,
     user_ip String,
     severity String,
@@ -25,6 +31,7 @@ CREATE TABLE IF NOT EXISTS logs.logs (
 ) ENGINE = MergeTree()
 ORDER BY (timestamp, user_id, severity, action);
 """
+
 client.execute(create_logs_table)
 
 print("The logs table was created successfully.")
