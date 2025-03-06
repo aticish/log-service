@@ -26,6 +26,8 @@ services:
         environment:
             - CLICKHOUSE_USER=${CLICKHOUSE_USER}
             - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD}
+            - CLICKHOUSE_DATABASE=${CLICKHOUSE_DATABASE}
+            - CLICKHOUSE_TABLE=${CLICKHOUSE_TABLE}
         depends_on:
             - clickhouse
         restart: unless-stopped
@@ -59,10 +61,17 @@ services:
         volumes:
             - ./docker/dummy:/dummy
         working_dir: /dummy
+        environment:
+            - CLICKHOUSE_USER=${CLICKHOUSE_USER}
+            - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD}
+            - CLICKHOUSE_DATABASE=${CLICKHOUSE_DATABASE}
+            - CLICKHOUSE_TABLE=${CLICKHOUSE_TABLE}
         depends_on:
             - clickhouse
             - logservice
         restart: "no"
+        labels:
+            - "traefik.enable=false"
         networks:
             - log-network
         entrypoint: sh -c "chmod +x /dummy/dummy.sh && /dummy/dummy.sh"
