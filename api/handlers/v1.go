@@ -30,5 +30,15 @@ func VersionOne(c *fiber.Ctx) error {
 			Message: err.Error(),
 		})
 	}
+
+	// Only read and write methods allowed for logs
+	if request.Method != "write" && request.Method != "read" {
+		return c.Status(fiber.StatusMethodNotAllowed).JSON(&internal.Response{
+			Code:    fiber.StatusMethodNotAllowed,
+			Status:  "error",
+			Message: internal.ErrorInvalidLogMethod.Error(),
+		})
+	}
+
 	return nil
 }
