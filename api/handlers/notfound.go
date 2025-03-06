@@ -11,7 +11,7 @@ func NotFound(c *fiber.Ctx) error {
 	return c.JSON(&internal.Response{
 		Code:    fiber.StatusNotFound,
 		Status:  "error",
-		Message: "Not Found",
+		Message: internal.ErrorPageNotFound.Error(),
 		Data:    nil,
 	})
 }
