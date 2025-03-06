@@ -28,6 +28,7 @@ services:
             - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD}
             - CLICKHOUSE_DATABASE=${CLICKHOUSE_DATABASE}
             - CLICKHOUSE_TABLE=${CLICKHOUSE_TABLE}
+            - LOGAPI_TOKEN=${LOGAPI_TOKEN}
         depends_on:
             - clickhouse
         restart: unless-stopped
