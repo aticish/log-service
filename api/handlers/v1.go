@@ -3,6 +3,7 @@ package handlers
 import (
 	"log"
 
+	"github.com/aticish/log-service/actions"
 	"github.com/aticish/log-service/internal"
 	"github.com/gofiber/fiber/v2"
 )
@@ -40,5 +41,23 @@ func VersionOne(c *fiber.Ctx) error {
 		})
 	}
 
-	return nil
+	var response *internal.Response
+
+	// Read logs
+	if request.Method == "read" {
+		response, err = actions.Read(request.Data)
+	} else if request.Method == "write" {
+		response, err = actions.Write(request.Data)
+	}
+
+	// request not completed
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(&internal.Response{
+			Code:    fiber.StatusInternalServerError,
+			Status:  "error",
+			Message: err.Error(),
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(response)
 }
