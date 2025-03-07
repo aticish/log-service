@@ -1,5 +1,7 @@
 package internal
 
 const (
-	LogWrittenMessage string = "Log has been written successfully!"
+	LogRetrievedMessage string = "Log has been retrieved successfully!"
+	LogWrittenMessage   string = "Log has been written successfully!"
+	LogNotFoundMessage  string = "No log found!"
 )
