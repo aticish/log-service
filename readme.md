@@ -55,7 +55,7 @@ Authentication: Bearer LOGAPI_TOKEN
 
 If this header is missing or invalid, the server will return a `401 Unauthorized` error.
 
-#### Example Request for Reading Logs
+### Example Request for Reading Logs
 
 To read logs, you can use the following request example:
 
@@ -104,7 +104,7 @@ To read logs, you can use the following request example:
     - **order**: Sorting field. Supported values are `timestamp`, `user_id`, `user_ip`, `severity`, `action`. Default is `timestamp`.
     - **direction**: Sorting direction (`"ASC"` for ascending, `"DESC"` for descending`).
 
-#### Example Request for Writing Logs
+### Example Request for Writing Logs
 
 To log an event, use the following request example:
 
